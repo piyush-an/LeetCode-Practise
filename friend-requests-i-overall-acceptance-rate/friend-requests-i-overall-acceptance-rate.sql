@@ -25,19 +25,19 @@
 -- SELECT COUNT(*) from FriendRequest
 
 SELECT accept_rate = 
-CASE request_count WHEN '0' THEN '0.00'
+CASE request_count WHEN '0' THEN '0.00' -- Divisor must be non zero, in such case default value
 ELSE
 CAST
 ( (CAST
 (accepted_count AS float)/CAST
 (request_count AS float)) AS decimal
-(10,2))
+(10,2))     -- scale is upto 2 digits
 END
 FROM
     (SELECT (
-    SELECT COUNT ( DISTINCT CONCAT(requester_id, accepter_id) )
+    SELECT COUNT ( DISTINCT CONCAT(requester_id, accepter_id) ) -- to count more then 2 distinct columns, use CONCAT to consider them as one column
         FROM RequestAccepted ) AS accepted_count,
-        (SELECT COUNT( DISTINCT CONCAT(sender_id, send_to_id) )
+        (SELECT COUNT( DISTINCT CONCAT(sender_id, send_to_id) ) -- As above
         FROM FriendRequest ) AS request_count
 )
 result
