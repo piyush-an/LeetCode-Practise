@@ -6,14 +6,21 @@
 -- insert into orders (order_number, customer_number) values (3, 3)
 -- insert into orders (order_number, customer_number) values (4, 3)
 
--- Solution
+-- Solution 1
 
-SELECT customer_number
-FROM (SELECT TOP 1
-        customer_number, count(order_number) AS total_order
-    FROM orders
-    GROUP BY customer_number
-    ORDER BY total_order DESC) result
+-- SELECT customer_number
+-- FROM (SELECT TOP 1
+--         customer_number, count(order_number) AS total_order
+--     FROM orders
+--     GROUP BY customer_number
+--     ORDER BY total_order DESC) result
+
+-- Solution 2
+
+SELECT TOP 1 customer_number
+FROM orders
+GROUP BY customer_number
+ORDER BY COUNT(order_number) DESC
 
 
 -- End
