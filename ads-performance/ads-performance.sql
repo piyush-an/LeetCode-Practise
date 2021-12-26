@@ -18,9 +18,10 @@ select ad_id,
     ctr =
 CASE  WHEN (SELECT COUNT(action)
     from Ads
-    where ad_id= a.ad_id and action='Clicked') = 0 and (SELECT COUNT(action)
-    from Ads
-    where ad_id= a.ad_id and action='Viewed') = 0 THEN 0
+    where  ad_id= a.ad_id and action IN ('Clicked', 'Viewed'))= 0 THEN 0
+    -- where ad_id= a.ad_id and action='Clicked') = 0 and (SELECT COUNT(action)
+    -- from Ads
+    -- where ad_id= a.ad_id and action='Viewed') = 0 THEN 0
 ELSE
 CAST((ROUND((SELECT COUNT(action)
     from Ads
