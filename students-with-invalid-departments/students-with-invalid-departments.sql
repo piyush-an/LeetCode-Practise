@@ -20,15 +20,13 @@
 -- insert into Students (id, name, department_id) values (11, 'Madelynn', 1)
 
 -- SOLUTION 1
+-- select DISTINCT (s.id), s.name
+-- from Students s LEFT JOIN Departments d ON s.department_id = d.id
+-- where d.id is null
+-- ORDER BY s.id
 
 
--- Select * from Departments
--- Select * from Students
-
-
-select DISTINCT (s.id), s.name
-from Students s LEFT JOIN Departments d ON s.department_id = d.id
-where d.id is null
-ORDER BY s.id
+-- SOLUTION 2
+select id, [name] from Students where department_id NOT IN (select id from Departments)
 
 -- END
