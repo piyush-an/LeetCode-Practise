@@ -11,13 +11,16 @@
 
 -- SOLUTION 1
 -- select * from Employee
--- select * from Employee e1 JOIN Employee e2 ON e1.team_id = e2.team_id
-select e1.employee_id, COUNT(*) AS team_size
-from Employee e1 CROSS JOIN Employee e2
-WHERE e1.team_id = e2.team_id
-GROUP BY e1.employee_id
-ORDER BY e1.employee_id
+-- select e1.employee_id, COUNT(*) AS team_size
+-- from Employee e1 CROSS JOIN Employee e2
+-- WHERE e1.team_id = e2.team_id
+-- GROUP BY e1.employee_id
+-- ORDER BY e1.employee_id
 
-
+-- SOLUTION 2
+select e.employee_id, (select count(team_id)
+    from employee
+    where team_id = e.team_id) AS team_size
+FROM EMPLOYEE e
 
 -- END
