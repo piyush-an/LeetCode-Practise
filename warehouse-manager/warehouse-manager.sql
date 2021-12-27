@@ -17,18 +17,21 @@
 -- insert into Products (product_id, product_name, Width, [Length], Height) values (4, 'LC-T-Shirt', 4, 10, 20)
 
 -- SOLUTION 1 
+-- SELECT resultset.[name] as warehouse_name, sum(lotsize) as volume
+-- from (
+-- select [name],
+--         -- p.Width * p.[Length] * p.Height as eachsize,
+--         p.Width * p.[Length] * p.Height * w.units as lotsize
+--     from Warehouse w JOIN Products p ON w.product_id = p.product_id
+-- ) resultset
+-- group by resultset.[name] 
 
-
--- select *,p.Width * p.[Length] * p.Height as eachsize, p.Width * p.[Length] * p.Height * w.units as lotsize from Warehouse w JOIN Products p ON w.product_id = p.product_id
-
-SELECT resultset.[name] as warehouse_name, sum(lotsize) as volume
-from (
-select [name],
-        -- p.Width * p.[Length] * p.Height as eachsize,
-        p.Width * p.[Length] * p.Height * w.units as lotsize
-    from Warehouse w JOIN Products p ON w.product_id = p.product_id
-) resultset
-group by resultset.[name] 
+-- SOLUTION 2
+select DISTINCT([name]) as warehouse_name,
+    SUM(p.Width * p.[Length] * p.Height * w.units) OVER(PARTITION BY [name]) as volume
+from Warehouse w
+    JOIN Products p
+    ON w.product_id = p.product_id
 
  
 -- END
