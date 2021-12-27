@@ -21,7 +21,7 @@ Select
     employee_id,
     bonus = 
     CASE WHEN employee_id % 2 != 0
-        and LOWER(LEFT([name], 1)) != 'm' 
+        and LOWER(LEFT(TRIM([name]), 1)) != 'm' 
     THEN salary ELSE 0 
     END
 from Employees
