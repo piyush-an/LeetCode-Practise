@@ -15,16 +15,24 @@
 
 
 -- SOLUTION 1 
+--     select e.employee_id as employee_id
+--     from Employees e FULL JOIN Salaries s ON e.employee_id = s.employee_id
+--     where s.salary is NULL
+-- UNION
+--     select s.employee_id as employee_id
+--     from Employees e FULL JOIN Salaries s ON e.employee_id = s.employee_id
+--     where e.name is NULL
+-- ORDER BY employee_id
 
 
-    select e.employee_id as employee_id
-    from Employees e FULL JOIN Salaries s ON e.employee_id = s.employee_id
-    where s.salary is NULL
-UNION
-    select s.employee_id as employee_id
-    from Employees e FULL JOIN Salaries s ON e.employee_id = s.employee_id
-    where e.name is NULL
+
+-- SOLUTION 2
+select employee_id = CASE 
+WHEN s.employee_id is null THEN e.employee_id ELSE s.employee_id
+END
+from Employees e FULL JOIN Salaries s ON e.employee_id = s.employee_id
+WHERE 
+s.employee_id IS NULL or e.name IS NULL
 ORDER BY employee_id
-
 
 -- END, 
