@@ -13,13 +13,18 @@
 
 
 -- SOLUTION 1
-Select DISTINCT (num) as ConsecutiveNums
-from (
-SELECT *,
-        LEAD(num) OVER (ORDER BY id) as next_one_line,
-        LEAD(num, 2) OVER (ORDER BY id) as next_two_line
-    FROM Logs )  result_set
-where num = next_one_line and next_one_line = next_two_line
+-- Select DISTINCT (num) as ConsecutiveNums
+-- from (
+-- SELECT *,
+--         LEAD(num) OVER (ORDER BY id) as next_one_line,
+--         LEAD(num, 2) OVER (ORDER BY id) as next_two_line
+--     FROM Logs )  result_set
+-- where num = next_one_line and next_one_line = next_two_line
 
+-- SOLUTION 2
+SELECT DISTINCT(num) as ConsecutiveNums from (
+SELECT num, sum([check]) OVER (ORDER BY id) as rolling_sum from (
+select *, case when LAG(num) OVER (ORDER BY id) = num THEN 0 ELSE 1 END as [check] from logs ) result_set_A ) result_set_B
+GROUP BY num, rolling_sum having count(*) > 2
 
 -- END
