@@ -14,13 +14,18 @@
 
 -- SOLUTION 1
 
-with find_people as (
-SELECT dept_id, COUNT(dept_id) OVER (PARTITION BY dept_id) as student_number FROM  Student )
+-- with find_people as (
+-- SELECT dept_id, COUNT(dept_id) OVER (PARTITION BY dept_id) as student_number FROM  Student )
 
-select dept_name, ISNULL(student_number, 0) as student_number
-from find_people fp RIGHT JOIN Department d ON fp.dept_id = d.dept_id
-group by dept_name, student_number
-order by student_number desc, dept_name
+-- select dept_name, ISNULL(student_number, 0) as student_number
+-- from find_people fp RIGHT JOIN Department d ON fp.dept_id = d.dept_id
+-- group by dept_name, student_number
+-- order by student_number desc, dept_name
 
+-- SOLUTION 2
+select d.dept_name, COUNT(s.student_id) as student_number
+from Department d LEFT JOIN Student s ON d.dept_id = s.dept_id
+GROUP BY dept_name
+order by student_number desc, d.dept_name
 
 -- END
