@@ -8,22 +8,28 @@
 -- insert into RequestAccepted (requester_id, accepter_id, accept_date) values ('3', '4', '2016/06/09')
 
 -- SOLUTION 1
-SELECT TOP 1 person_id as id , SUM (count_requester_id) as num FROM (
-SELECT DISTINCT (accepter_id) as person_id,
--- COUNT(accepter_id) OVER (PARTITION BY requester_id) as count_accepter_id,
-COUNT(requester_id) OVER (PARTITION BY accepter_id) as count_requester_id
- from RequestAccepted
-UNION ALL
-
-SELECT DISTINCT (requester_id) as person_id,
-COUNT(accepter_id) OVER (PARTITION BY requester_id) as count_accepter_id
+-- SELECT TOP 1 person_id as id , SUM (count_requester_id) as num FROM (
+-- SELECT DISTINCT (accepter_id) as person_id,
+-- -- COUNT(accepter_id) OVER (PARTITION BY requester_id) as count_accepter_id,
 -- COUNT(requester_id) OVER (PARTITION BY accepter_id) as count_requester_id
- from RequestAccepted ) result_set
- GROUP BY person_id
- ORDER BY num desc
+--  from RequestAccepted
+-- UNION ALL
+
+-- SELECT DISTINCT (requester_id) as person_id,
+-- COUNT(accepter_id) OVER (PARTITION BY requester_id) as count_accepter_id
+-- -- COUNT(requester_id) OVER (PARTITION BY accepter_id) as count_requester_id
+--  from RequestAccepted ) result_set
+--  GROUP BY person_id
+--  ORDER BY num desc
  
---  SELECT * FROM RequestAccepted
---  SELECT * FROM RequestAccepted r1 JOIN RequestAccepted r2 ON r1.accepter_id = r2.requester_id
+
+-- SOLUTION 2
+SELECT TOP 1 id, COUNT(*) as num from (
+select accepter_id as id from RequestAccepted
+UNION ALL
+select requester_id as id from RequestAccepted) result_set
+GROUP BY id 
+ORDER BY 2 desc
 
 
 -- END
