@@ -21,8 +21,17 @@
 
 -- SELECT *, COUNT(product_key) OVER (PARTITION BY customer_id) as buy_count FROM Customer
 
-SELECT DISTINCT (customer_id) FROM (
-SELECT *, COUNT(product_key) OVER (PARTITION BY customer_id) as buy_count FROM (
-select DISTINCT customer_id, product_key from Customer ) result_set ) result_set_two where buy_count = (SELECT COUNT(product_key) from Product )
+-- SELECT DISTINCT (customer_id) FROM (
+-- SELECT *, COUNT(product_key) OVER (PARTITION BY customer_id) as buy_count FROM (
+-- select DISTINCT customer_id, product_key from Customer ) result_set ) result_set_two where buy_count = (SELECT COUNT(product_key) from Product )
 
+
+
+-- SOLUTION 2
+
+SELECT customer_id
+from Customer
+GROUP BY customer_id
+HAVING COUNT(DISTINCT product_key ) = (SELECT COUNT ( product_key)
+from Product )
 -- END
