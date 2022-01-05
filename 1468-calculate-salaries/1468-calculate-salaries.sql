@@ -1,5 +1,6 @@
 /* Write your T-SQL query statement below */
 
+-- SOLUTION 1
 with tax_slab as
 (
 select 
@@ -26,4 +27,19 @@ from Salaries s
 JOIN (SELECT * FROM tax_slab) as ts
 -- JOIN ts
 ON s.company_id = ts.company_id
+
+
+
+-- SOLUTION 2
+-- with temp as 
+-- (select company_id,employee_id,employee_name, salary,
+--               max(salary) over (partition by company_id) as max_salary from Salaries)
+
+-- select company_id,employee_id,employee_name,
+-- case 
+--     when max_salary < 1000 then salary
+--     when max_salary >= 1000 and max_salary <= 10000 then Convert(int,round(salary - (salary*.24),0))
+--     when max_salary > 10000 then Convert(int,round(salary - (salary*.49),0))
+-- end as salary
+-- from temp
 
