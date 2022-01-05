@@ -17,32 +17,35 @@
 
 
 -- SOLUTION 1
+-- Runtime: 1889 ms, faster than 52.89% of MS SQL Server online submissions for Capital Gain/Loss.
+-- SELECT
+--  buys.stock_name,
+--  sells.total_sales - buys.total_buys as capital_gain_loss
+-- FROM 
+-- (SELECT 
+-- stock_name, operation,
+-- SUM(price) as total_buys
+-- FROM Stocks
+-- where operation = 'Buy'
+-- GROUP BY stock_name, operation) buys
+-- JOIN
+-- (SELECT 
+-- stock_name, operation,
+-- SUM(price) as total_sales
+-- FROM Stocks
+-- where operation = 'Sell'
+-- GROUP BY stock_name, operation) sells
+-- ON buys.stock_name = sells.stock_name
 
-SELECT
---  * ,
- buys.stock_name,
- sells.total_sales - buys.total_buys as capital_gain_loss
 
-FROM 
-(SELECT 
--- *
-stock_name, operation,
-SUM(price) as total_buys
+-- SOLUTION 2
+
+select
+stock_name, 
+capital_gain_loss = 
+SUM(CASE 
+WHEN operation = 'Buy' THEN -price ELSE price
+END)
 FROM Stocks
-where operation = 'Buy'
-GROUP BY stock_name, operation) buys
-
-JOIN
-
-(SELECT 
--- *
-stock_name, operation,
-SUM(price) as total_sales
-FROM Stocks
-where operation = 'Sell'
-GROUP BY stock_name, operation) sells
-
-ON buys.stock_name = sells.stock_name
-
-
+GROUP BY stock_name
 -- END
