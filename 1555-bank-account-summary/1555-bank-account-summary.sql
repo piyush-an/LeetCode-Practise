@@ -22,7 +22,8 @@ SELECT
 -- * 
 u.user_id,
 u.user_name,
-(u.credit + ISNULL(t.net_total, 0)) as credit,
+-- (u.credit + ISNULL(t.net_total, 0)) as credit,
+coalesce(u.credit + t.net_total, u.credit, t.net_total) as credit,
 credit_limit_breached = 
 CASE
 WHEN (u.credit + ISNULL(t.net_total, 0)) < 0 THEN 'Yes' ELSE 'No'
