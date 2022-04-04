@@ -16,31 +16,47 @@
 -- insert into Matches (match_id, host_team, guest_team, host_goals, guest_goals) values ('4', '20', '30', '1', '0')
 -- insert into Matches (match_id, host_team, guest_team, host_goals, guest_goals) values ('5', '50', '30', '1', '0')
 
--- SOLUTION 2
-with points as (
-select host_team, guest_team,
-host_team_points =
-CASE
-WHEN host_goals > guest_goals THEN 3
-WHEN host_goals < guest_goals THEN 0
-WHEN host_goals = guest_goals THEN 1
-END,
-guest_team_points =
-CASE
-WHEN host_goals > guest_goals THEN 0
-WHEN host_goals < guest_goals THEN 3
-WHEN host_goals = guest_goals THEN 1
-END
-from Matches )
 
-select t.team_id, team_name, ISNULL(scorepointss, 0) num_points from Teams t LEFT JOIN (
-select teamid, SUM(scorepoints) as scorepointss from (
-select host_team as teamid, host_team_points as scorepoints from points
-UNION ALL
-select guest_team as teamid, guest_team_points as scorepoints from points ) resuktset
-group by teamid ) result_set_3
-ON t.team_id = result_set_3.teamid
-ORDER BY 3 desc, 1
+
+-- SOLUTION 3
+SELECT team_id, team_name,
+SUM(
+    CASE WHEN team_id = host_team AND host_goals > guest_goals THEN 3
+         WHEN team_id = guest_team AND guest_goals > host_goals THEN 3
+         WHEN host_goals = guest_goals THEN 1
+         ELSE 0
+    END          
+) AS "num_points"
+FROM Teams t
+LEFT JOIN Matches m ON t.team_id = m.host_team OR t.team_id = m.guest_team
+GROUP BY team_id, team_name
+ORDER BY num_points DESC, team_id
+
+-- -- SOLUTION 2
+-- with points as (
+-- select host_team, guest_team,
+-- host_team_points =
+-- CASE
+-- WHEN host_goals > guest_goals THEN 3
+-- WHEN host_goals < guest_goals THEN 0
+-- WHEN host_goals = guest_goals THEN 1
+-- END,
+-- guest_team_points =
+-- CASE
+-- WHEN host_goals > guest_goals THEN 0
+-- WHEN host_goals < guest_goals THEN 3
+-- WHEN host_goals = guest_goals THEN 1
+-- END
+-- from Matches )
+
+-- select t.team_id, team_name, ISNULL(scorepointss, 0) num_points from Teams t LEFT JOIN (
+-- select teamid, SUM(scorepoints) as scorepointss from (
+-- select host_team as teamid, host_team_points as scorepoints from points
+-- UNION ALL
+-- select guest_team as teamid, guest_team_points as scorepoints from points ) resuktset
+-- group by teamid ) result_set_3
+-- ON t.team_id = result_set_3.teamid
+-- ORDER BY 3 desc, 1
 
 -- SOLUTION 1
 -- SELECT * FROM Teams
